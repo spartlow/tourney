@@ -1,2 +1,2 @@
 # tourney
-Family basketball rournament scoring system.
+Family basketball tournament scoring system.
