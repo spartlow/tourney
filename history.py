@@ -57,11 +57,11 @@ Steve Sam over Brian Seth
 Steve Brian over Matt Seth Sam
 '''
 
-tournaments = {
-    '2014': tournament14,
-    '2015': tournament15,
-    '2016': tournament16,
-    '2017': tournament17,
-    '2018': tournament18
+history = {
+    '14': tournament14,
+    '15': tournament15,
+    '16': tournament16,
+    '17': tournament17,
+    '18': tournament18
 }
 

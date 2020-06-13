@@ -1,5 +1,5 @@
 import tourney
-import tournaments
+import history
 
 t = tourney.Tourney()
 games_string = '''
@@ -13,11 +13,11 @@ Dave Gene Seth over Brian Jennn
 
 all_games = ""
 
-for key in tournaments.tournaments:
-    print(key+":")
-    all_games += "\n" + tournaments.tournaments[key]
+for key in history.history:
+    print(key+" ELO:")
+    all_games += "\n" + history.history[key]
     t = tourney.Tourney()
-    t.parse_games(tournaments.tournaments[key])
+    t.parse_games(history.history[key])
     df = tourney.get_scores_per_game_dataframe(t, tourney.ELO)
     print(df)
     #print(df.drop(columns="Game Summaries").iloc[-1])
@@ -26,6 +26,6 @@ for key in tournaments.tournaments:
 t_all = tourney.Tourney()
 t_all.parse_games(all_games)
 df = tourney.get_scores_per_game_dataframe(t_all, tourney.ELO)
-print("All Time:")
+print("All Time ELO:")
 print(df.drop(columns="Game Summaries").iloc[-1].sort_values())
 
