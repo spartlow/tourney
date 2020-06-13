@@ -1,4 +1,4 @@
-year2018 = '''
+tournament18 = '''
 Steve Brian over Gene Dan
 Gene Jim over Steve Brian Rae
 Brian Sam over Steve Jim
@@ -9,7 +9,7 @@ Brian Jermaine over Gene Jim
 Gene Jermaine over Brian Jim
 '''
 
-year2017 = '''
+tournament17 = '''
 Steve Brian Dave over Gene Matt Sam
 Steve Brian Dave over Jim Matt Sam
 Jim Dave Matt over Steve Gene Sam
@@ -18,7 +18,7 @@ Steve Jim Matt over Brian Dave Sam
 Steve Gene over Brian Sam
 '''
 
-year2016 = '''
+tournament16 = '''
 Steve Brian Gene over Rachel Jermaine Natalie Matt
 Matt Dave Jim over Steve Brian Gene
 Jermaine Dave Jim over Steve Brian Matt
@@ -29,7 +29,7 @@ Brian Dave JimS over Gene Jim Dan
 Brian Jim Dan over Gene Dave JimS
 '''
 
-year2015 = '''
+tournament15 = '''
 Gene Sam Steve over Brian Jack Seth
 Matt Seth Steve over Brian Jack Sam
 Dave Gene Sam over Matt Seth Steve
@@ -44,7 +44,7 @@ Jack Jim over Brian Gene
 Gene Jim over Brian Jack 
 '''
 
-year2014 = '''
+tournament14 = '''
 Steve Brian Seth over Matt Dan Jack
 Steve Jack Dave over Seth Jim Sam
 Dave Jim Sam over Steve Brian Matt
@@ -56,4 +56,12 @@ Matt Dave over Steve Brian Sam
 Steve Sam over Brian Seth
 Steve Brian over Matt Seth Sam
 '''
+
+tournaments = {
+    '2014': tournament14,
+    '2015': tournament15,
+    '2016': tournament16,
+    '2017': tournament17,
+    '2018': tournament18
+}
 
