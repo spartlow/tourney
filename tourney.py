@@ -114,7 +114,7 @@ class Tourney:
     def get_win_count(self, name):
         if name not in self.df:
             return None
-        counts = df[name].value_counts()
+        counts = self.df[name].value_counts()
         if 'W' in counts:
             return counts['W']
         else:
@@ -122,7 +122,7 @@ class Tourney:
     def get_loss_count(self, name):
         if name not in self.df:
             return None
-        counts = df[name].value_counts()
+        counts = self.df[name].value_counts()
         if 'L' in counts:
             return counts['L']
         else:

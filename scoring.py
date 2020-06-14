@@ -2,6 +2,7 @@
 Scoring systems for Tourney
 '''
 import random
+import pandas
 
 class ScoringSystem:
     "A virtual class for scoring systems"
@@ -13,6 +14,8 @@ class ScoringSystem:
         for name in self.tourney.get_player_names():
             scores[name] = self.get_player_score(name)
         return scores
+    def get_player_scores_series(self):
+        return pandas.Series(self.get_player_scores()).sort_values()
     def get_player_score(self, name):
         "Return the score of a single player by name. A higher score is considered better."
         return None
@@ -22,6 +25,12 @@ class RandomScorer(ScoringSystem):
     "A terrible, example scoring system where everyone gets a random score each time"
     def get_player_score(self, name):
         return random.random()
+
+class WinPercentageScorer(ScoringSystem):
+    "Score based solely on win percentage"
+    def get_player_score(self, name):
+        return self.tourney.get_win_pct(name)
+
 
 class ELO(ScoringSystem):
     "Scoring system based on ELO used in chess and other tournaments"
@@ -61,3 +70,4 @@ class ELO(ScoringSystem):
         self.player_scores = {k:self.starting_score for k in self.tourney.get_player_names()}
         for game in self.tourney.get_games():
             self._score_game(game)
+

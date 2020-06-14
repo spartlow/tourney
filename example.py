@@ -30,3 +30,9 @@ df = tourney.get_scores_per_game_dataframe(t_all, scoring.ELO)
 print("All Time ELO:")
 print(df.drop(columns="Game Summaries").iloc[-1].sort_values())
 
+
+#t_all.parse_games(all_games)
+scores = scoring.WinPercentageScorer(t_all).get_player_scores_series()
+print("All Time Win Percentage:")
+print(scores)
+
