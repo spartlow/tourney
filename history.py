@@ -19,7 +19,7 @@ Steve Gene over Brian Sam
 '''
 
 tournament16 = '''
-Steve Brian Gene over Rachel Jermaine Natalie Matt
+Steve Brian Gene over Rae Jermaine Natalie Matt
 Matt Dave Jim over Steve Brian Gene
 Jermaine Dave Jim over Steve Brian Matt
 Steve Gene Jermaine over Brian Natalie Dan
@@ -58,10 +58,10 @@ Steve Brian over Matt Seth Sam
 '''
 
 history = {
-    '14': tournament14,
-    '15': tournament15,
-    '16': tournament16,
-    '17': tournament17,
-    '18': tournament18
+    'T14': tournament14,
+    'T15': tournament15,
+    'T16': tournament16,
+    'T17': tournament17,
+    'T18': tournament18
 }
 
