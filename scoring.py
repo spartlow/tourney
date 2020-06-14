@@ -41,12 +41,14 @@ class ELO(ScoringSystem):
         self.starting_score = 1500
         self.max_score_loss = 32 #* 5
         self._build_scores()
+
     def get_player_score(self, name):
         if name not in self.player_scores:
             self.player_scores[name] = self.starting_score
         return self.player_scores[name]
-    ''' Return expectation that Team A wins over Team B'''
+
     def _get_game_expectation(self, team_a, team_b):
+        ''' Return expectation that Team A wins over Team B'''
         r_a = 0
         for name in team_a:
             r_a += self.get_player_score(name)
@@ -70,4 +72,50 @@ class ELO(ScoringSystem):
         self.player_scores = {k:self.starting_score for k in self.tourney.get_player_names()}
         for game in self.tourney.get_games():
             self._score_game(game)
+
+class WinBonusScorer(ScoringSystem):
+    """Score is win percentage plus bonuses for hard games
+    
+    Additionally, each score is record is padded up to 5 games with losses.
+    """
+    def __init__(self, tourney):
+        self.tourney = tourney
+        self.min_games = 5
+        self._build_game_bonuses()
+
+    def get_player_score(self, name):
+        score = self.get_adjusted_win_pct(name) + self.get_player_bonuses(name)
+        #if not score: return 0.0
+        return score
+
+    def get_adjusted_win_pct(self, name):
+        wins = self.tourney.get_win_count(name)
+        losses = self.tourney.get_loss_count(name)
+        games = max(self.min_games,wins+losses)
+        return wins / games
+    
+    def get_player_bonuses(self,name):
+        return self.bonuses_df[name].sum()
+    
+    def _build_game_bonuses(self):
+        self.bonuses_df = self.tourney.get_dataframe().copy()
+        for col in self.bonuses_df.columns:
+            self.bonuses_df[col].values[:] = 0
+        game_number = 0
+        for game in self.tourney.get_games():
+            winners_power = 0
+            losers_power = 0
+            for winner in game['winners']:
+                winners_power += self.get_adjusted_win_pct(winner)
+            for loser in game['losers']:
+                losers_power += self.get_adjusted_win_pct(loser)
+            for winner in game['winners']:
+                my_power = self.get_adjusted_win_pct(winner)
+                bonus = max(0,losers_power - winners_power + my_power)
+                self.bonuses_df[winner][game_number] = bonus
+            game_number += 1
+
+            
+
+
 

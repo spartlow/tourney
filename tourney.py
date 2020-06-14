@@ -52,26 +52,6 @@ def to_dataframe(games):
             add_to_dataframe(df, player, game_number, "L")
     return df
 
-def get_adjusted_win_percentage(df, name):
-    if name not in df:
-        raise Exception("Unknown person: "+name)
-    counts = df[name].value_counts()
-    if 'W' in counts:
-        wins = counts['W']
-    else:
-        wins = 0
-    if 'L' in counts:
-        losses = counts['L']
-    else:
-        losses = 0
-    if wins+losses < 5: # magic number!
-        losses = 5 - wins
-    if wins==0:
-        pct = 0.0
-    else:
-        pct = wins / (wins+losses)
-    return pct
-
 def get_raw_win_percentage(df, name):
     if name not in df:
         raise Exception("Unknown person: "+name)
@@ -108,11 +88,11 @@ class Tourney:
             summaries.append(', '.join(game['winners'])+' over '+', '.join(game['losers']))
         return summaries
     def get_dataframe(self):
-        return self.dataframe
+        return self.df.copy()
     def get_player_names(self):
         return list(self.df)
     def get_win_count(self, name):
-        if name not in self.df:
+        if name not in list(self.df):
             return None
         counts = self.df[name].value_counts()
         if 'W' in counts:
@@ -136,6 +116,18 @@ class Tourney:
             return 0.0
         else:
             return wins / (wins+losses)
+    def get_pvp_win_df(self):
+        "Get DataFrame as grid showing how many times player won against another"
+        players = self.get_player_names()
+        df = pandas.DataFrame(columns=players, index=players)
+        for col in df.columns:
+            df[col].values[:] = 0
+        for game in self.games:
+            for winner in game['winners']:
+                for loser in game['losers']:
+                    df[winner][loser] += 1
+        return df
+
 
 
 def get_scores_per_game(tourney, scoring_system):
