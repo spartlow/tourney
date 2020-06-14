@@ -128,6 +128,29 @@ class Tourney:
                     df[winner][loser] += 1
         return df
 
+    def get_player_stats(self, name):
+        stats = {}
+        stats['name'] = name
+        wins = self.get_win_count(name)
+        losses = self.get_loss_count(name)
+        stats['games'] = wins + losses
+        stats['wins'] = wins
+        stats['losses'] = losses
+        if wins == 0: stats['win pct'] = 0.0
+        else: stats['win pct'] = wins / (wins + losses)
+        return stats
+
+    def get_all_player_stats(self):
+        stats = []
+        for player in self.get_player_names():
+            stats.append(self.get_player_stats(player))
+        return stats
+    
+    def get_all_player_stats_dataframe(self):
+        return pandas.DataFrame(self.get_all_player_stats()).set_index('name')
+
+
+
 
 
 def get_scores_per_game(tourney, scoring_system):
