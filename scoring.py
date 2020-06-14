@@ -39,7 +39,7 @@ class ELO(ScoringSystem):
     def __init__(self, tourney):
         self.tourney = tourney
         self.starting_score = 1500
-        self.max_score_loss = 32 #* 5
+        self.max_score_loss = 32 * 2
         self._build_scores()
 
     def get_player_score(self, name):
