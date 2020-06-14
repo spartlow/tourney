@@ -81,11 +81,13 @@ class WinBonusScorer(ScoringSystem):
     def __init__(self, tourney):
         self.tourney = tourney
         self.min_games = 5
+        self.bonus_factor = 1 #0.5
         self._build_game_bonuses()
 
     def get_player_score(self, name):
-        score = self.get_adjusted_win_pct(name) + self.get_player_bonuses(name)
-        #if not score: return 0.0
+        score = self.get_adjusted_win_pct(name) + (self.get_player_bonuses(name) \
+            * self.bonus_factor) / \
+            max(5,self.tourney.get_win_count(name) + self.tourney.get_loss_count(name)) * 100
         return score
 
     def get_adjusted_win_pct(self, name):
@@ -93,7 +95,7 @@ class WinBonusScorer(ScoringSystem):
         losses = self.tourney.get_loss_count(name)
         games = max(self.min_games,wins+losses)
         return wins / games
-    
+
     def get_player_bonuses(self,name):
         return self.bonuses_df[name].sum()
     

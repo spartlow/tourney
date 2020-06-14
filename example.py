@@ -40,12 +40,20 @@ print(scores)
 print("\nPVP:")
 print(t_all.get_pvp_win_df())
 """
+
+print("\nT15:")
 t = tourney.Tourney()
-t.parse_games(games_string)
-print("Steve wins: "+str(t.get_win_count("Steve")))
-print("Steve pct: "+str(t.get_win_pct("Steve")))
+t.parse_games(history.history["T15"])
+
+#t_all.parse_games(all_games)
+scores = scoring.WinPercentageScorer(t).get_player_scores_series()
+print("\nT15 Win Percentage:")
+print(scores)
+
+
+#print("Steve wins: "+str(t.get_win_count("Steve")))
+#print("Steve pct: "+str(t.get_win_pct("Steve")))
 scorer = scoring.WinBonusScorer(t)
-print("Steve adj pct: "+str(scorer.get_adjusted_win_pct("Steve")))
 #scorer._build_game_bonuses()
 print(scorer.bonuses_df)
 print(scorer.get_player_scores())
