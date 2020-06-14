@@ -57,7 +57,45 @@ Steve Sam over Brian Seth
 Steve Brian over Matt Seth Sam
 '''
 
+tournament13 = '''
+Steve Brian over Jack Matt
+Jim Seth Matt over Jack Sam Brian
+Steve Matt over Jim Sam Brian
+Steve Sam Brian over Jim Matt
+Jim Seth Brian over Jack Sam Matt
+Jim Jack Brian over Steve Sam Matt
+Jim Sam Matt over Steve Seth Brian
+Steve Sam Brian over Jim Seth Matt
+Seth Matt Brian over Steve Jack Sam
+Jim Seth Matt over Steve Dave Sam
+Steve Seth Matt over Jack Dave Sam
+Steve Seth Brian over Jim Sam Matt
+Seth Matt Brian over Steve Jim Sam
+Jim Brian over Steve Sam Matt
+Steve Seth Matt over Jim Jack Brian
+Steve Jack Matt over Seth Dave Sam
+Seth Sam Brian over Seth Dave Matt
+Steve Sam over Jack Brian
+'''
+
+tournament12 = '''
+Jim Matt Brian over Steve Gene Sam
+Steve Jim Brian over Dan Sam Matt
+Steve Jim Gene over Sam Matt Brian
+Steve Brian over Jim Matt
+Gene Brian Rae over Steve Jim
+Jim Jack Matt over Steve Brian
+Jim Jack Brian over Steve Gene Sam Matt
+Jack Gene Sam Brian over Steve Jim Matt
+Steve Jim Matt over Jack Gene Brian
+Jim Matt Brian over Steve Jack Gene Dan
+Matt Brian over Steve Jim
+Matt Brian over Jim Gene
+'''
+
 history = {
+    'T12': tournament12,
+    'T13': tournament13,
     'T14': tournament14,
     'T15': tournament15,
     'T16': tournament16,
