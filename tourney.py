@@ -2,6 +2,7 @@ import re
 import json
 import pandas
 import statistics
+import itertools
 
 def parse_games(string):
     games = []
@@ -116,16 +117,48 @@ class Tourney:
             return 0.0
         else:
             return wins / (wins+losses)
+
     def get_pvp_win_df(self):
-        "Get DataFrame as grid showing how many times player won against another"
+        """Get DataFrame as grid showing how many times player won against another
+        
+        Build DataFrame such as:
+                        Subject   Bob  Maea  Dean  Sean
+        Other Relationship Type    
+        Bob   Together     Won      9     3     2     2
+                           Lost     4     1     0     3
+              Against      Won      0     2     6     2
+                           Lost     0     1     9     3
+        ...
+        Won/Lost is from the perspective of the column
+        """
         players = self.get_player_names()
-        df = pandas.DataFrame(columns=players, index=players)
+        print(players)
+        indexes = pandas.MultiIndex.from_product( \
+            [players,("Together","Against"),("Played","Won","Lost")], \
+            names=("Other","Relationship","Type"))
+        df = pandas.DataFrame(columns=players, index=indexes)
         for col in df.columns:
             df[col].values[:] = 0
+        #print(df)
         for game in self.games:
+            for combo in list(itertools.combinations_with_replacement(game['winners'],2)):
+                df[combo[0]][(combo[1],"Together","Played")] += 1
+                df[combo[0]][(combo[1],"Together","Won")] += 1
+                if combo[0] != combo[1]:
+                    df[combo[1]][(combo[0],"Together","Played")] += 1
+                    df[combo[1]][(combo[0],"Together","Won")] += 1
+            for combo in list(itertools.combinations_with_replacement(game['losers'],2)):
+                df[combo[0]][(combo[1],"Together","Played")] += 1
+                df[combo[0]][(combo[1],"Together","Lost")] += 1
+                if combo[0] != combo[1]:
+                    df[combo[1]][(combo[0],"Together","Played")] += 1
+                    df[combo[1]][(combo[0],"Together","Lost")] += 1
             for winner in game['winners']:
                 for loser in game['losers']:
-                    df[winner][loser] += 1
+                    df[winner][(loser,"Against","Played")] += 1
+                    df[winner][(loser,"Against","Won")] += 1
+                    df[loser][(winner,"Against","Played")] += 1
+                    df[loser][(winner,"Against","Lost")] += 1
         return df
 
     def get_player_stats(self, name):
