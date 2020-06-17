@@ -117,6 +117,23 @@ class Tourney:
             return 0.0
         else:
             return wins / (wins+losses)
+    def get_possible_games(self,players_per_team, players=None):
+        games = []
+        if not players:
+            players = self.get_player_names()
+        games_players = itertools.combinations(players, players_per_team * 2)
+        for players in games_players:
+            team_combos = itertools.combinations(players,players_per_team)
+            teams_seen = []
+            for team_a in team_combos:
+                if set(team_a) not in teams_seen:
+                    teams_seen.append(set(team_a))
+                    team_b = tuple(set(players) - set(team_a))
+                    teams_seen.append(set(team_b))
+                    games.append((team_a, team_b))
+        return games
+
+
 
     def get_pvp_win_df(self):
         """Get DataFrame as grid showing how many times player won against another
@@ -132,7 +149,6 @@ class Tourney:
         Won/Lost is from the perspective of the column
         """
         players = self.get_player_names()
-        print(players)
         indexes = pandas.MultiIndex.from_product( \
             [players,("Together","Against"),("Played","Won","Lost")], \
             names=("Other","Relationship","Type"))
