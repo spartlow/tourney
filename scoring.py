@@ -14,6 +14,31 @@ class ScoringSystem:
         for name in self.tourney.get_player_names():
             scores[name] = self.get_player_score(name)
         return scores
+    def get_game_expectation(self, team_a, team_b):
+        ''' Return expectation that Team A wins over Team B'''
+        scores_a = 0
+        for name in team_a:
+            scores_a += self.get_player_score(name)
+        scores_b = 0
+        for name in team_b:
+            scores_b += self.get_player_score(name)
+        if scores_b + scores_a == 0:
+            e_a = 0.5
+        else:
+            e_a = scores_a / (scores_a + scores_b)
+        return e_a
+    def get_fairest_games(self, players_per_team, players=None):
+        def get_fairness(game):
+            expectation = self.get_game_expectation(game[0],game[1])
+            fairness = (0.5 - abs(0.5 - expectation)) * 2 # Value 0-1 with 1 as the most fair
+            #print(str(game[0])+" vs "+str(game[1])+": "+str(expectation)+" fairness="+str(fairness))
+            return fairness
+        game_combos = self.tourney.get_possible_games(players_per_team, players=players)
+        game_combos = sorted(game_combos, key=get_fairness, reverse=True) # Get decending most fair to least
+        return game_combos[:5]
+        
+            
+
     def get_player_scores_series(self):
         return pandas.Series(self.get_player_scores()).sort_values()
     def get_player_score(self, name):
@@ -47,7 +72,7 @@ class ELO(ScoringSystem):
             self.player_scores[name] = self.starting_score
         return self.player_scores[name]
 
-    def _get_game_expectation(self, team_a, team_b):
+    def get_game_expectation(self, team_a, team_b):
         ''' Return expectation that Team A wins over Team B'''
         r_a = 0
         for name in team_a:
@@ -59,7 +84,7 @@ class ELO(ScoringSystem):
         return e_a
         
     def _score_game(self, game):
-        e_a = self._get_game_expectation(game['winners'],game['losers'])
+        e_a = self.get_game_expectation(game['winners'],game['losers'])
         score_exchange = (self.max_score_loss * len(game['losers'])) * (1 - e_a)
         winner_win = score_exchange / len(game['winners'])
         loser_loss = score_exchange / len(game['losers'])
