@@ -117,7 +117,7 @@ class Tourney:
             return 0.0
         else:
             return wins / (wins+losses)
-    def get_possible_games(self,players_per_team, players=None):
+    def get_possible_games(self, players_per_team, players=None):
         games = []
         if not players:
             players = self.get_player_names()
@@ -132,6 +132,37 @@ class Tourney:
                     teams_seen.append(set(team_b))
                     games.append((team_a, team_b))
         return games
+    def get_possible_teams(self, players_per_team, players=None):
+        if not players:
+            players = self.get_player_names()
+        return list(itertools.combinations(players, players_per_team))
+
+    def get_unplayed_teams(self, players_per_team, players=None):
+        """Teams that have not yet played"""
+        if not players:
+            players = self.get_player_names()
+        combos = self.get_possible_teams(players_per_team, players=players)
+        teams = itertools.filterfalse(self.has_team_played, combos)
+        return list(teams)
+
+    def has_team_played(self, team):
+        for game in self.games:
+            if set(team) == set(game['winners']) or set(team) == set(game['losers']):
+                return True
+        return False
+
+    def has_combo_played(self, combo):
+        for game in self.games:
+            if set(combo[0]) == set(game['winners']) and set(combo[1]) == set(game['losers']):
+                return True
+            if set(combo[1]) == set(game['winners']) and set(combo[0]) == set(game['losers']):
+                return True
+        return False
+    #def get_possible_unplayed_games(self, players_per_team, players=None):
+    #    combos = self.get_possible_games(players_per_team, players=players)
+    #    combos[:] = itertools.filterfalse(self.has_combo_played, combos)
+        
+
 
 
 

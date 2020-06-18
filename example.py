@@ -24,7 +24,7 @@ Jennn over Gene Seth Jim
 all_games = ""
 
 for key in history.history:
-    if key not in ['T12', 'T13']:
+    #if key not in ['T12', 'T13']:
         all_games += "\n" + history.history[key]
     #print(key+" WinBonusScorer:")
     #t = tourney.Tourney()
@@ -56,6 +56,10 @@ print("\nFairest games:")
 t = tourney.Tourney()
 t.parse_games(history.tournament16)
 print(scoring.WinPercentageScorer(t_all).get_fairest_games(2, players=['Steve', 'Brian', 'Jim', 'Dave', 'Sam']))
+
+#print(t_all.get_possible_teams(5))
+print("\nUnplayed games:")
+print(t_all.get_unplayed_teams(3, players=['Steve', 'Brian', 'Jim', 'Dave', 'Sam']))
 
 #print("\nT15:")
 #t = tourney.Tourney()
