@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tourney Stats</title>
+</head>
+<body>
+
+<h2>
+    {{heading}}
+</h2>
+
+{% for table in tables %}
+    {{ table|safe }}
+{% endfor %}
+</body>
+<html>

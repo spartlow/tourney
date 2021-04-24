@@ -21,11 +21,11 @@ Jennn over Gene Seth Jim
 #print(df.head(3))
 
 #"""
-all_games = ""
+all_games = history.get_all_games()
 
-for key in history.history:
+#for key in history.history:
     #if key not in ['T12', 'T13']:
-        all_games += "\n" + history.history[key]
+        #all_games += "\n" + history.history[key]
     #print(key+" WinBonusScorer:")
     #t = tourney.Tourney()
     #t.parse_games(history.history[key])
@@ -41,24 +41,31 @@ print("All Time ELO:")
 print(df.drop(columns="Game Summaries").iloc[-1].sort_values())
 
 
+df = tourney.get_scores_per_game_dataframe(t_all, scoring.WinBonusScorer)
+print("All Time WinBonus:")
+print(df.drop(columns="Game Summaries").iloc[-1].sort_values())
+
+
+
 #t_all.parse_games(all_games)
 scores = scoring.WinPercentageScorer(t_all).get_player_scores_series()
 print("\nAll Time Win Percentage:")
 print(scores)
 
 print("\nAll Time Stats:")
-print(t_all.get_all_player_stats_dataframe())
+print(t_all.get_all_player_stats_dataframe().sort_values("games"))
 
 print("\nPVP:")
 print(t_all.get_pvp_win_df())
+#print(t_all.get_pvp_win_df()[t_all.get_pvp_win_df().index.isin(['Steve'], level=0)])
 
 print("\nFairest games:")
-t = tourney.Tourney()
-t.parse_games(history.tournament16)
+#t = tourney.Tourney()
+#t.parse_games(history.tournament16)
 print(scoring.WinPercentageScorer(t_all).get_fairest_games(2, players=['Steve', 'Brian', 'Jim', 'Dave', 'Sam']))
 
 #print(t_all.get_possible_teams(5))
-print("\nUnplayed games:")
+print("\nUnplayed teams:")
 print(t_all.get_unplayed_teams(3, players=['Steve', 'Brian', 'Jim', 'Dave', 'Sam']))
 
 #print("\nT15:")

@@ -103,3 +103,10 @@ history = {
     'T18': tournament18
 }
 
+def get_all_games():
+    all_games = ""
+    for key in history:
+        all_games += "\n" + history[key]
+    return all_games
+
+
