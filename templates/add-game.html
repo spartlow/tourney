@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{heading}}</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type='text/javascript'>
+    function removeItemAll(arr, value) {
+        var i = 0;
+        while (i < arr.length) {
+            if (arr[i] === value) {
+            arr.splice(i, 1);
+            } else {
+            ++i;
+            }
+        }
+        return arr;
+    }
+    $(document).ready(function(){
+        winners = []
+        losers = []
+        $('.player').click(function(){
+            name = $(this).text()
+            if ( $( this ).hasClass( "player-win" ) ) {
+                $(this).removeClass("player-win")
+                $(this).addClass("player-loss")
+                removeItemAll(winners, name)
+                losers.push(name)
+                losers.sort()
+            } else if ( $( this ).hasClass( "player-loss" ) ) {
+                $(this).removeClass("player-loss")
+                removeItemAll(losers, name)
+            } else {
+                $(this).addClass("player-win")
+                winners.push(name)
+                winners.sort()
+            }
+            if (winners.length > 0) winnersString = winners.join(", ")
+            else winnersString = "?"
+            if (losers.length > 0) losersString = losers.join(", ")
+            else losersString = "?"
+            $("#game-summary").text(winnersString+" OVER "+losersString)
+            $("#input-game-summary").val((winnersString+" OVER "+losersString).replaceAll(",",""))
+        });
+    });
+    function validateForm() {
+        if ($("#input-game-summary").val().indexOf("?") >= 0) {
+            alert("Select both teams")
+            return false
+        }
+    }
+    </script>
+    <style>
+        .player {
+            display: inline-block;
+            padding: 20px;
+            margin: 5px;
+            width: 60px;
+            border: 1px solid;
+        }
+        a.player {
+            color: black;
+            text-decoration: none;
+        }
+        .player-win {
+            background-color: greenyellow;
+        }
+        .player-loss {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+
+<p>{{message}}</p>
+
+<h1>
+    {{heading}}
+</h1>
+
+<p id="game-summary">Select players</p>
+
+<ul>
+{% for player in players %}
+    <a href="javascript:;" class="player">{{player}}</a>
+{% endfor %}
+</ul>
+
+<form action="" method="post" onsubmit="return validateForm()">
+    <input id="input-game-summary" name="input-game-summary" type="hidden" value="?" />
+    <input type="submit" value="Submit" />
+</form>
+
+</body>
+<html>
