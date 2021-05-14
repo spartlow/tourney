@@ -45,9 +45,14 @@
     });
     function validateForm() {
         if ($("#input-game-summary").val().indexOf("?") >= 0) {
-            alert("Select both teams")
+            alert("Select both teams! 😠")
             return false
         }
+        if ($("#input-game-summary").val().match(/.+( [\w]+){2} OVER ([\w]+ ){2}.+/) == null) {
+            alert("Each team needs at least three players. 🤪")
+            return false
+        }
+        
     }
     </script>
     <style>

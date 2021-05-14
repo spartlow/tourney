@@ -8,13 +8,13 @@ def parse_games(string):
     games = []
     lines = string.split("\n")
     #print(lines)
-    pattern = re.compile(r"^([\s]*(?P<winner>[\w]+)[\s]*,?)+ (over|beat) ([\s]*(?P<loser>[\w]+)[\s]*,?)+( on (?P<time>.*))?$")
+    pattern = re.compile(r"^([\s]*(?P<winner>[\w]+)[\s]*,?)+ (over|beat) ([\s]*(?P<loser>[\w]+)[\s]*,?)+( on (?P<time>.*))?$", re.IGNORECASE)
     for line in lines:
         if line.strip()=='':
             pass
         else:
             #matches = re.match(r"(?P<winners>.*) over (?P<losers>.*)( on (?P<time>.*))?",line)
-            matches = re.match(r"(?P<winners>.*) over (?P<losers>.*)",line)
+            matches = re.match(r"(?P<winners>.*) over (?P<losers>.*)", line, re.IGNORECASE)
             #print(matches)
             #matches = re.findall(pattern,line)
             if not matches:

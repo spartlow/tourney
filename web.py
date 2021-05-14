@@ -10,11 +10,19 @@ app = Flask(__name__)
 @app.route('/')
 def hello_world():
     contents = '''
+    <a href="games">Games</a><br><br>
     <a href="stats">Stats</a><br><br>
     <a href="stats2">Stats2</a><br><br>
     <a href="add-game">Add a game</a><br><br>
     '''
     return render_template('basic.html', heading="Index", contents=contents)
+
+@app.route('/games')
+def print_games():
+    games = open("data/games.txt", "r").read()
+    t = tourney.Tourney()
+    t.parse_games(games)
+    return render_template('stats.html', list = t.get_games(), heading="Games")
 
 @app.route('/stats')
 def print_stats():

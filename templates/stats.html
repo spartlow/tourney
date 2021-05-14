@@ -10,8 +10,14 @@
     {{heading}}
 </h2>
 
+{% for item in list %}
+    <li>{{ item }}</li>
+{% endfor %}
+
+
 {% for table in tables %}
     {{ table|safe }}
 {% endfor %}
+
 </body>
 <html>
