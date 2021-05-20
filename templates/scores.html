@@ -6,9 +6,11 @@
     <li>{{ item }}</li>
 {% endfor %}
 
+{{ image|safe }}
 
 {% for table in tables %}
     {{ table|safe }}
 {% endfor %}
+
 
 {% endblock %}

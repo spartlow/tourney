@@ -3,6 +3,7 @@ import json
 import pandas
 import statistics
 import itertools
+import math
 
 def parse_games(string):
     games = []
@@ -94,7 +95,7 @@ class Tourney:
         return list(self.df)
     def get_win_count(self, name):
         if name not in list(self.df):
-            return None
+            return 0
         counts = self.df[name].value_counts()
         if 'W' in counts:
             return counts['W']
@@ -102,7 +103,7 @@ class Tourney:
             return 0
     def get_loss_count(self, name):
         if name not in self.df:
-            return None
+            return 0
         counts = self.df[name].value_counts()
         if 'L' in counts:
             return counts['L']
@@ -117,6 +118,21 @@ class Tourney:
             return 0.0
         else:
             return wins / (wins+losses)
+
+    def get_all_possible_games(self, players=None):
+        games = []
+        teams_seen = []
+        if not players:
+            players = self.get_player_names()
+        team_as = itertools.combinations(players, math.ceil(len(players)/2))
+        for team_a in team_as:
+            if set(team_a) not in teams_seen:
+                teams_seen.append(set(team_a))
+                team_b = tuple(set(players) - set(team_a))
+                teams_seen.append(set(team_b))
+                games.append((team_a, team_b))
+        return games
+
     def get_possible_games(self, players_per_team, players=None):
         games = []
         if not players:
@@ -208,7 +224,7 @@ class Tourney:
                     df[loser][(winner,"Against","Lost")] += 1
         return df
 
-    def get_player_stats(self, name):
+    def get_player_stats(self, name, scoring_system=None):
         stats = {}
         stats['name'] = name
         wins = self.get_win_count(name)
@@ -218,16 +234,18 @@ class Tourney:
         stats['losses'] = losses
         if wins == 0: stats['win pct'] = 0.0
         else: stats['win pct'] = wins / (wins + losses)
+        if scoring_system:
+            stats['score'] = scoring_system(self).get_player_score(name)
         return stats
 
-    def get_all_player_stats(self):
+    def get_all_player_stats(self, scoring_system=None):
         stats = []
         for player in self.get_player_names():
-            stats.append(self.get_player_stats(player))
+            stats.append(self.get_player_stats(player, scoring_system))
         return stats
     
-    def get_all_player_stats_dataframe(self):
-        return pandas.DataFrame(self.get_all_player_stats()).set_index('name')
+    def get_all_player_stats_dataframe(self, scoring_system=None):
+        return pandas.DataFrame(self.get_all_player_stats(scoring_system)).set_index('name')
 
 
 

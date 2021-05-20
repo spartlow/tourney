@@ -3,14 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>{{heading}}</title>
-</head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block head %}
+    {{contents|safe}}
+    {% endblock %}
+    </head>
 <body>
 
+<nav>
+    <a href="{{ url_for('print_index') }}">Index</a><br><br>
+    <a href="{{ url_for('print_games') }}">Games</a><br><br>
+    <a href="{{ url_for('print_stats') }}">Stats</a><br><br>
+    <a href="{{ url_for('print_stats2') }}">Stats2</a><br><br>
+    <a href="{{ url_for('print_addgame') }}">Add a game</a><br><br>
+</nav>
+
 <h1>
-    {{heading}}
+{{heading}}
 </h1>
 
+{% block content %}
 {{contents|safe}}
+{% endblock %}
 
 </body>
 <html>

@@ -27,13 +27,16 @@ class ScoringSystem:
         else:
             e_a = scores_a / (scores_a + scores_b)
         return e_a
-    def get_fairest_games(self, players_per_team, players=None):
+    def get_fairest_games(self, players_per_team=None, players=None):
         def get_fairness(game):
             expectation = self.get_game_expectation(game[0],game[1])
             fairness = (0.5 - abs(0.5 - expectation)) * 2 # Value 0-1 with 1 as the most fair
             #print(str(game[0])+" vs "+str(game[1])+": "+str(expectation)+" fairness="+str(fairness))
             return fairness
-        game_combos = self.tourney.get_possible_games(players_per_team, players=players)
+        if players and not players_per_team:
+            game_combos = self.tourney.get_all_possible_games(players=players)
+        else:
+            game_combos = self.tourney.get_possible_games(players_per_team, players=players)
         game_combos = sorted(game_combos, key=get_fairness, reverse=True) # Get decending most fair to least
         return game_combos[:5]
         
@@ -106,25 +109,30 @@ class WinBonusScorer(ScoringSystem):
     def __init__(self, tourney):
         self.tourney = tourney
         self.min_games = 5
-        self.bonus_factor = 1 #0.5
+        self.bonus_factor = 1 # 0.5
         self._build_game_bonuses()
 
     def get_player_score(self, name):
-        score = self.get_adjusted_win_pct(name) + (self.get_player_bonuses(name) \
-            * self.bonus_factor) / \
-            max(5,self.tourney.get_win_count(name) + self.tourney.get_loss_count(name)) * 100
+        "Caluate the score by using percentage win plus their avg bonus"
+        score = self.get_adjusted_win_pct(name) * 100 \
+            + (self.get_player_bonuses(name) * self.bonus_factor) \
+            / max(self.min_games, self.tourney.get_win_count(name) + self.tourney.get_loss_count(name)) \
+            * 100
         return score
 
     def get_adjusted_win_pct(self, name):
         wins = self.tourney.get_win_count(name)
         losses = self.tourney.get_loss_count(name)
-        games = max(self.min_games,wins+losses)
+        games = max(self.min_games, wins + losses)
         return wins / games
 
     def get_player_bonuses(self,name):
+        if name not in self.bonuses_df:
+            return 0
         return self.bonuses_df[name].sum()
     
     def _build_game_bonuses(self):
+        "Build bonuses where a players bonus is thier opponents win percentage minus their teammates"
         self.bonuses_df = self.tourney.get_dataframe().copy()
         for col in self.bonuses_df.columns:
             self.bonuses_df[col].values[:] = 0
@@ -138,7 +146,7 @@ class WinBonusScorer(ScoringSystem):
                 losers_power += self.get_adjusted_win_pct(loser)
             for winner in game['winners']:
                 my_power = self.get_adjusted_win_pct(winner)
-                bonus = max(0,losers_power - winners_power + my_power)
+                bonus = max(0, losers_power - winners_power + my_power)
                 self.bonuses_df[winner][game_number] = bonus
             game_number += 1
 

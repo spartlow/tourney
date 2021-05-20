@@ -1,0 +1,8 @@
+{% extends "basic.html" %}
+
+{% block content %}
+{% for game in games %}
+    {% set game_number = loop.index %}
+    {% include "game-summary.html" %}
+{% endfor %}
+{% endblock %}
