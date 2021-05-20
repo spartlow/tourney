@@ -1,10 +1,12 @@
 from flask import Flask, render_template, request
+import flask
 from cycler import cycler
 import pandas
 import re
 import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
+import os
 import tourney
 import scoring
 import history
@@ -12,6 +14,9 @@ import history
 app = Flask(__name__)
 
 pandas.set_option('display.max_colwidth', -1)
+app.config.update(
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+)
 
 @app.route('/')
 def print_index():
@@ -25,7 +30,7 @@ def print_games():
     t = tourney.Tourney()
     t.parse_games(games)
     #return render_template('stats.html', list = t.get_games(), heading="Games")
-    return render_template('games.html', games = t.get_games(), heading="Games2")
+    return render_template('games.html', games = t.get_games(), heading="Games")
 
 @app.route('/stats')
 def print_stats():
@@ -53,12 +58,12 @@ def print_stats():
             df.to_html(classes='data')], \
         heading="Tournament Stats", image=image)
 
-@app.route('/stats2')
-def print_stats2():
+@app.route('/historical')
+def print_historical():
     t_all = tourney.Tourney()
     t_all.parse_games(history.get_all_games())
     df = t_all.get_pvp_win_df()
-    return render_template('stats.html', tables=[df.to_html(classes='data')], heading="All time stats")
+    return render_template('stats.html', tables=[df.to_html(classes='data')], heading="Historical Statistics")
 
 @app.route('/add-game', methods=['GET', 'POST'])
 def print_addgame():
@@ -70,16 +75,21 @@ def print_addgame():
             file1.write(game_summary+"\n")
             file1.close()
             message = "Added game: "+game_summary+"."
+            flask.flash("Added game: "+game_summary+".")
+            return flask.redirect(flask.url_for('print_addgame'))
         else:
             message = "Invalid input"
-
     else:
-        message = ""
+        message = flask.session.pop('message', "")
     f = open("data/players.txt", "r")
     players = f.read().splitlines()
     players.sort()
     #print(players)
     return render_template('add-game.html', players=players, heading="Add a game", message=message)
+
+@app.route('/rules')
+def print_rules():
+    return render_template('rules.html', heading="Tournament Rules")
 
 @app.route('/predict')
 def print_prediction():

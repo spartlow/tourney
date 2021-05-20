@@ -11,12 +11,23 @@
 <body>
 
 <nav>
-    <a href="{{ url_for('print_index') }}">Index</a><br><br>
-    <a href="{{ url_for('print_games') }}">Games</a><br><br>
-    <a href="{{ url_for('print_stats') }}">Stats</a><br><br>
-    <a href="{{ url_for('print_stats2') }}">Stats2</a><br><br>
-    <a href="{{ url_for('print_addgame') }}">Add a game</a><br><br>
+    <a href="{{ url_for('print_index') }}">🏀</a> - 
+    <a href="{{ url_for('print_games') }}">Games</a> - 
+    <a href="{{ url_for('print_addgame') }}">Add a game</a> - 
+    <a href="{{ url_for('print_stats') }}">Tourney Stats</a> - 
+    <a href="{{ url_for('print_historical') }}">Historical Stats</a> - 
+    <a href="{{ url_for('print_rules') }}">Tourney Rules</a>
 </nav>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
 
 <h1>
 {{heading}}

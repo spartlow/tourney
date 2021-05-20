@@ -47,8 +47,8 @@
             alert("Select both teams! 😠")
             return false
         }
-        if ($("#input-game-summary").val().match(/.+( [\w]+){2} OVER ([\w]+ ){2}.+/) == null) {
-            alert("Each team needs at least three players. 🤪")
+        if ($("#input-game-summary").val().match(/.+( [\w]+) OVER ([\w]+ ).+/) == null) {
+            alert("Each team needs at least two players. 🤪")
             return false
         }
         

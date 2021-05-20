@@ -1,3 +1,10 @@
+nav a {
+    display: inline-block;
+    text-decoration: none;
+    color: rgb(163, 92, 0);
+}
+
+
 .game-summary {
     display: block;
 }
