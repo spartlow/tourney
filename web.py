@@ -103,11 +103,18 @@ def print_prediction():
 
 @app.route('/build-team')
 def print_build_team():
-    players = "Steve Brian Dave Seth Sam"
+    f = open("data/players.txt", "r")
+    players = f.read().splitlines()
+    players.sort()
+    return render_template('build-team.html', players=players, api_url=flask.url_for("api_fairest_game"))
+
+@app.route('/api/fairest_game')
+def api_fairest_game():
+    players = request.args.get('players').strip().split(" ")
     t = tourney.Tourney()
     t.parse_games(history.get_all_games())
-    games = scoring.WinBonusScorer(t).get_fairest_games(players=players.split(" "))
-    return render_template('basic.html', contents=games)
+    games = scoring.WinBonusScorer(t).get_fairest_games(players=players)
+    return {'games': games}
 
 
 

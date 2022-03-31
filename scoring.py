@@ -38,7 +38,10 @@ class ScoringSystem:
         else:
             game_combos = self.tourney.get_possible_games(players_per_team, players=players)
         game_combos = sorted(game_combos, key=get_fairness, reverse=True) # Get decending most fair to least
-        return game_combos[:5]
+        games = []
+        for combo in game_combos[:5]:
+            games.append({"a":combo[0],"b":combo[1],"expectation_a_wins":self.get_game_expectation(combo[0],combo[1])})
+        return games
         
             
 

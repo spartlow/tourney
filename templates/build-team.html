@@ -1,0 +1,110 @@
+{% extends "basic.html" %}
+
+{% block heading %}
+<h1>Suggest Team</h1>
+{% endblock %}
+
+
+{% block head %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type='text/javascript'>
+    function removeItemAll(arr, value) {
+        var i = 0;
+        while (i < arr.length) {
+            if (arr[i] === value) {
+            arr.splice(i, 1);
+            } else {
+            ++i;
+            }
+        }
+        return arr;
+    }
+    $(document).ready(function(){
+        var games = []
+        var game_index = 0
+        var selected_players = []
+        $('.player').click(function(){
+            name = $(this).text()
+            if ( $( this ).hasClass( "player-selected" ) ) {
+                $(this).removeClass("player-selected")
+                removeItemAll(selected_players, name)
+            } else {
+                $(this).addClass("player-selected")
+                selected_players.push(name)
+                selected_players.sort()
+            }
+            if (selected_players.length > 0) selected_playersString = selected_players.join(", ")
+            else selected_playersString = "?"
+            $("#game-summary").text("Loading...")
+            //$("#input-game-summary").val("Loading...")
+            $.get("{{ api_url }}?players="+selected_playersString.replaceAll(", ","+"),
+                function(data, status) {
+                    games = data.games
+                    display_game(0)
+                    summary = data.games[0].a.join(", ") + " vs " + data.games[0].b.join(", ")
+                    //alert("Data: " + data + "\nStatus: " + status + "\nSummary: "+ summary);
+                    $("#game-summary").text(summary)
+                }
+            );
+        });
+        $('#next-game').click(function(){
+            if (games.length > 0) display_next_game()
+            else $("#game-summary").text("Select players first.")
+        });
+        function display_next_game() {
+            display_game((game_index + 1) % games.length)
+        }
+        function display_game(game_num) {
+            game_index = game_num % games.length
+            summary = games[game_index].a.join(", ") + " vs " + games[game_index].b.join(", ")
+            //alert("Data: " + data + "\nStatus: " + status + "\nSummary: "+ summary);
+            $("#game-summary").text(summary)
+        }
+    });
+    function validateForm() {
+        if ($("#input-game-summary").val().indexOf("?") >= 0) {
+            alert("Select both teams! 😠")
+            return false
+        }
+        if ($("#input-game-summary").val().match(/.+( [\w]+) OVER ([\w]+ ).+/) == null) {
+            alert("Each team needs at least two players. 🤪")
+            return false
+        }
+        
+    }
+    </script>
+    <style>
+        .player {
+            display: inline-block;
+            padding: 20px;
+            margin: 5px;
+            width: 60px;
+            border: 1px solid;
+        }
+        a.player {
+            color: black;
+            text-decoration: none;
+        }
+        .player-selected {
+            background-color: rgb(245, 247, 144);
+        }
+    </style>
+</head>
+<body>
+
+{% endblock %}
+{% block content %}
+
+<p>{{message}}</p>
+
+<p><a href="javascript:;" class="button" id="next-game">🔄</a> 
+<span id="game-summary">Select players</span>
+</p>
+<ul>
+{% for player in players %}
+    <a href="javascript:;" class="player">{{player}}</a>
+{% endfor %}
+</ul>
+
+{% endblock %}

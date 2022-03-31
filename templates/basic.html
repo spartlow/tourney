@@ -29,9 +29,11 @@
   {% endif %}
 {% endwith %}
 
+{% block heading %}
 <h1>
 {{heading}}
 </h1>
+{% endblock %}
 
 {% block content %}
 {{contents|safe}}

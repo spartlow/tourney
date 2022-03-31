@@ -41,3 +41,7 @@ a.player {
 .player-loss {
     background-color: rgb(245, 157, 157);
 }
+
+a.button {
+    text-decoration: none;
+}
